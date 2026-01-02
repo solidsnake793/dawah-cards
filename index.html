@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Christianity Dawah Cards</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Crimson+Pro:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-card: #111827;
+            --bg-elevated: #1f2937;
+            --bg-hover: #374151;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-emerald-dim: rgba(16, 185, 129, 0.15);
+            --accent-amber: #f59e0b;
+            --accent-amber-dim: rgba(245, 158, 11, 0.15);
+            --accent-red: #ef4444;
+            --accent-red-dim: rgba(239, 68, 68, 0.15);
+            --accent-blue: #3b82f6;
+            --accent-blue-dim: rgba(59, 130, 246, 0.15);
+            --accent-purple: #8b5cf6;
+            --accent-purple-dim: rgba(139, 92, 246, 0.15);
+            --accent-pink: #ec4899;
+            --accent-pink-dim: rgba(236, 72, 153, 0.15);
+            --accent-cyan: #06b6d4;
+            --accent-cyan-dim: rgba(6, 182, 212, 0.15);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.12);
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        body {
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+        
+        /* App Container */
+        .app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            padding: 16px 20px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+        
+        .header-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-emerald);
+        }
+        
+        .topic-counter {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        /* Cards Container */
+        .cards-viewport {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .cards-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+        
+        .cards-track.dragging {
+            transition: none;
+        }
+        
+        /* Individual Card */
+        .card {
+            min-width: 100%;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            touch-action: pan-y;
+        }
+        
+        .card::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .card::-webkit-scrollbar-thumb {
+            background: var(--bg-hover);
+            border-radius: 3px;
+        }
+        
+        /* Card Content Sections */
+        .card-header {
+            margin-bottom: 20px;
+        }
+        
+        .topic-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+        
+        .topic-badge.blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+        .topic-badge.emerald { background: var(--accent-emerald-dim); color: var(--accent-emerald); }
+        .topic-badge.red { background: var(--accent-red-dim); color: var(--accent-red); }
+        .topic-badge.amber { background: var(--accent-amber-dim); color: var(--accent-amber); }
+        .topic-badge.purple { background: var(--accent-purple-dim); color: var(--accent-purple); }
+        .topic-badge.pink { background: var(--accent-pink-dim); color: var(--accent-pink); }
+        .topic-badge.cyan { background: var(--accent-cyan-dim); color: var(--accent-cyan); }
+        
+        .card-title {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        
+        /* Their Claim Box */
+        .claim-box {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-left: 3px solid var(--accent-amber);
+        }
+        
+        .claim-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-amber);
+            margin-bottom: 8px;
+        }
+        
+        .claim-text {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+        
+        /* Section Headers */
+        .section {
+            margin-bottom: 24px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .section-icon.counter { background: var(--accent-emerald-dim); }
+        .section-icon.question { background: var(--accent-amber-dim); }
+        .section-icon.islam { background: var(--accent-emerald-dim); }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Counter Points */
+        .counter-point {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .counter-point-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .counter-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: var(--accent-emerald);
+            color: var(--bg-primary);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .counter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+        
+        .counter-details {
+            padding-left: 32px;
+        }
+        
+        .counter-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 14px;
+        }
+        
+        .counter-detail::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-emerald);
+            font-size: 11px;
+        }
+        
+        .verse-ref {
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+        
+        .highlight {
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+        
+        .highlight-red {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+        
+        /* Questions */
+        .question-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .question-num {
+            color: var(--accent-amber);
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+        
+        /* Islamic Position */
+        .islamic-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(20, 184, 166, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .quran-arabic {
+            font-family: 'Amiri', 'Traditional Arabic', serif;
+            font-size: 20px;
+            text-align: center;
+            color: #6ee7b7;
+            line-height: 2;
+            margin-bottom: 12px;
+            direction: rtl;
+        }
+        
+        .quran-translation {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .quran-ref {
+            font-size: 12px;
+            color: var(--accent-emerald);
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .islamic-summary {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        /* Comparison Table */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        
+        .compare-table th {
+            background: var(--bg-hover);
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .compare-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+        
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Denomination Cards */
+        .denom-card {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .denom-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-amber);
+            margin-bottom: 8px;
+        }
+        
+        .denom-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+        
+        /* Navigation Dots */
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 16px 20px 24px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            max-width: 100%;
+        }
+        
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-dot.active {
+            background: var(--accent-emerald);
+            width: 20px;
+            border-radius: 4px;
+        }
+        
+        /* Swipe Hint */
+        .swipe-hint {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-elevated);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .swipe-hint.hidden {
+            opacity: 0;
+        }
+        
+        .swipe-icon {
+            animation: swipeAnim 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes swipeAnim {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-8px); }
+        }
+        
+        /* Topic Menu */
+        .topic-menu-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .topic-menu-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .topic-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .topic-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 101;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .topic-menu-overlay.open .topic-menu {
+            transform: translateY(0);
+        }
+        
+        .topic-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .topic-menu-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .topic-menu-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .topic-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .topic-menu-item:hover {
+            background: var(--bg-elevated);
+        }
+        
+        .topic-menu-item.active {
+            background: var(--accent-emerald-dim);
+        }
+        
+        .topic-menu-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        
+        .topic-menu-item.active .topic-menu-num {
+            background: var(--accent-emerald);
+            color: var(--bg-primary);
+        }
+        
+        .topic-menu-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* Safe area for iOS */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .nav-dots {
+                padding-bottom: calc(24px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <span class="header-title">Dawah Reference</span>
+            <button class="topic-menu-btn" onclick="openMenu()">
+                <span>Topics</span>
+                <span>▼</span>
+            </button>
+        </header>
+        
+        <div class="cards-viewport">
+            <div class="cards-track" id="cardsTrack">
+                
+                <!-- CARD 1: Biblical Reliability -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge blue">Topic 1</span>
+                        <h1 class="card-title">Biblical Reliability</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"The Bible is the divinely inspired, inerrant Word of God, preserved perfectly throughout history."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">50,000 Errors Admitted by Christians</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jehovah's Witnesses (Awake! Sept 8, 1957): <span class="highlight">"50,000 ERRORS IN THE BIBLE"</span></p>
+                                <p class="counter-detail">RSV Preface: "No two manuscripts agree in all particulars" + "deliberate changes were introduced"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Gospel Authors UNKNOWN</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">RSV Bible admits: 1 Samuel, 2 Samuel, 1 Kings = <span class="highlight">"UNKNOWN"</span> authors</p>
+                                <p class="counter-detail">J.B. Phillips (Anglican scholar): "Scholars nowadays almost all reject" Matthew as author</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 1:1-3</span> — Luke admits he compiled from others, not divine inspiration</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Major Verses FORGED</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">1 John 5:7</span> (ONLY Trinity verse): Not in ANY Greek manuscript before 15th century — <span class="highlight">FORGED!</span></p>
+                                <p class="counter-detail"><span class="verse-ref">John 7:53-8:11</span> (woman caught in adultery): Added later</p>
+                                <p class="counter-detail"><span class="verse-ref">Mark 16:9-20</span> (last 12 verses): Oldest manuscripts end at 16:8</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Biblical Contradictions</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Who incited David's census? <span class="verse-ref">2 Sam 24:1</span> = GOD vs <span class="verse-ref">1 Chr 21:1</span> = SATAN</p>
+                                <p class="counter-detail">Famine length? <span class="verse-ref">2 Sam 24:13</span> = 7 years vs <span class="verse-ref">1 Chr 21:12</span> = 3 years</p>
+                                <p class="counter-detail">Jesus' genealogy: Matthew = 26 ancestors vs Luke = 41 ancestors</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If the Bible is perfectly preserved, why do Christian scholars admit 50,000 errors?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Why was the only explicit Trinity verse (1 John 5:7) forged in the 15th century?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">If God inspired the Bible, why don't scholars know who wrote most of it?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"So woe to those who write the 'scripture' with their own hands, then say, 'This is from Allah,' in order to exchange it for a small price."</p>
+                            <p class="quran-ref">Quran 2:79</p>
+                            <p class="islamic-summary">The Quran has been perfectly preserved: memorized from the beginning, standardized within 14 years, no variants in core text.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 2: Trinity & Divinity -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge emerald">Topic 2</span>
+                        <h1 class="card-title">Trinity & Divinity of Jesus</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus is God incarnate, the second person of the Holy Trinity (Father, Son, Holy Spirit)."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Jesus Denied Being God</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">John 14:28</span> — "The Father is <span class="highlight">greater than I</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">John 5:30</span> — "I can of mine own self do <span class="highlight">nothing</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Matthew 19:17</span> — "Why do you call me good? No one is good but God"</p>
+                                <p class="counter-detail"><span class="verse-ref">Mark 15:34</span> — "My God, my God, why have you forsaken me?" — God praying to God?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Trinity Invented at Church Councils (325-451 CE)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Word "Trinity" <span class="highlight">NEVER</span> appears in the Bible</p>
+                                <p class="counter-detail">Council of Nicea (325 CE): Emperor Constantine proposed it, threatened exile</p>
+                                <p class="counter-detail">Council of Constantinople (381 CE): Holy Spirit as 3rd person — <span class="highlight">300+ years after Jesus!</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">The ONLY Trinity Verse Was FORGED</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">1 John 5:7</span>: Not in any Greek manuscript before 15th century</p>
+                                <p class="counter-detail">Erasmus was pressured — someone <span class="highlight">manufactured</span> a Greek manuscript</p>
+                                <p class="counter-detail">Removed from modern translations (RSV, NIV, ESV)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Jesus Had Human Limitations</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Hungry, thirsty, sleepy, tired — <span class="verse-ref">Matt 4:2, John 19:28, Luke 8:23</span></p>
+                                <p class="counter-detail"><span class="verse-ref">Mark 13:32</span> — Didn't know the Hour</p>
+                                <p class="counter-detail"><span class="verse-ref">Mark 1:13</span> — Tempted by Satan — but <span class="verse-ref">James 1:13</span> says "God cannot be tempted"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If Jesus is God, why did he say "the Father is greater than I"?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">If Trinity was always believed, why did it take 400 years and imperial threats to formulate it?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">How can someone who was arrested and beaten be the all-powerful God?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"The Messiah, son of Mary, was not but a messenger; [other] messengers have passed on before him. And his mother was a supporter of truth. They both used to eat food."</p>
+                            <p class="quran-ref">Quran 5:75</p>
+                            <p class="islamic-summary">Eating food = human need = created being, not Creator.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 3: Crucifixion & Atonement -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge red">Topic 3</span>
+                        <h1 class="card-title">Crucifixion & Atonement</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus died on the cross as a sacrifice for humanity's sins. His death is necessary for salvation."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Jesus Prayed NOT to Die</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 26:39</span> — "O Father, if it be possible, <span class="highlight">let this cup pass from me</span>" — Repeated 3 times!</p>
+                                <p class="counter-detail"><span class="verse-ref">Hebrews 5:7</span> — His prayer was HEARD: "was heard in that he feared"</p>
+                                <p class="counter-detail">If Jesus came TO die, why pray desperately NOT to die?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Sign of Jonah FAILED</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 12:40</span> — Jesus prophesied: "<span class="highlight">3 days and 3 nights</span> in the heart of the earth"</p>
+                                <p class="counter-detail">Actual count: Friday night + Saturday day + Saturday night = <span class="highlight-red">1 day, 2 nights</span></p>
+                                <p class="counter-detail">Jesus' own prophecy failed!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Blood Sacrifice Contradicts the Bible</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Ezekiel 18:20</span> — "The son shall <span class="highlight">NOT</span> bear the iniquity of the father"</p>
+                                <p class="counter-detail"><span class="verse-ref">Ezekiel 18:21</span> — Repentance brings forgiveness, NO sacrifice needed</p>
+                                <p class="counter-detail"><span class="verse-ref">2 Chronicles 7:14</span> — "If my people humble themselves, pray...I will forgive" — No blood needed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Forgiveness WITHOUT Blood in Bible</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Luke 19:9</span> — Zacchaeus: "TODAY salvation has come" through repentance — <span class="highlight">BEFORE crucifixion!</span></p>
+                                <p class="counter-detail"><span class="verse-ref">Jonah 3</span> — Nineveh: 120,000+ forgiven through repentance and fasting alone</p>
+                                <p class="counter-detail"><span class="verse-ref">Matthew 6:12</span> — Lord's Prayer: "Forgive us" — No mention of sacrifice</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If Jesus came to die for sins, why did he pray "let this cup pass from me" THREE times?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">How were the people of Nineveh (120,000+) forgiven through repentance alone without blood sacrifice?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">How can punishing an innocent person (Jesus) for the guilty be just?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"And they did not kill him, nor did they crucify him; but [another] was made to resemble him to them... Rather, Allah raised him to Himself."</p>
+                            <p class="quran-ref">Quran 4:157-158</p>
+                            <p class="islamic-summary">No bearer of burdens will bear the burden of another (17:15). Each soul responsible for its own deeds.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 4: Jesus as Prophet -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge amber">Topic 4</span>
+                        <h1 class="card-title">Jesus as Prophet</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus is more than a prophet — he is God incarnate, the savior who died for sins."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Jesus Called Himself a Prophet</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Mark 6:4</span> — "A prophet is not without honor, except in his own country"</p>
+                                <p class="counter-detail"><span class="verse-ref">Matthew 21:11</span> — People: "This is <span class="highlight">the prophet</span> Jesus of Nazareth"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Early Disciples Called Jesus "A MAN"</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Acts 2:22</span> (33 CE): "Jesus of Nazareth, <span class="highlight">A MAN</span> approved by God with mighty works...which GOD DID THROUGH HIM"</p>
+                                <p class="counter-detail"><span class="verse-ref">Acts 3:13, 22, 23, 26</span> — Jesus called "SERVANT" and "PROPHET" — never "Son of God" or divine</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Jesus' Miracles Same as Earlier Prophets</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Feeding multitudes: Jesus (5,000) / Elisha (100) — <span class="verse-ref">2 Kings 4:44</span></p>
+                                <p class="counter-detail">Healing lepers: Jesus / Elisha — <span class="verse-ref">2 Kings 5:14</span></p>
+                                <p class="counter-detail">Raising dead: Jesus / Elijah — <span class="verse-ref">1 Kings 17:22</span></p>
+                                <p class="counter-detail">Elisha's BONES raised the dead — <span class="verse-ref">2 Kings 13:21</span> — Greater than Jesus?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Jesus Admitted Miracles Were From God</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">John 5:30</span> — "I can of mine own self do <span class="highlight">NOTHING</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 11:20</span> — "If I with the <span class="highlight">FINGER OF GOD</span> cast out devils..."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If miracles prove divinity, why aren't Elijah, Elisha, and Moses considered divine?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Why did Jesus say "I can of mine own self do nothing" if he was God?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">Why do the earliest Christian speeches (Acts 2-3) call Jesus "a man" and "prophet" but never "God"?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"[Jesus] said, 'Indeed, I am the servant of Allah. He has given me the Scripture and made me a prophet.'"</p>
+                            <p class="quran-ref">Quran 19:30</p>
+                            <p class="islamic-summary">Jesus identified himself as Allah's servant and prophet — exactly what Muslims believe.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 5: Original Message of Jesus -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge purple">Topic 5</span>
+                        <h1 class="card-title">Original Message of Jesus</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus came to die for sins and establish a new covenant that replaces the Old Testament law."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Jesus DID NOT Abolish the Law</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 5:17-18</span> — "Think <span class="highlight">NOT</span> that I came to abolish the law... not an iota, not a dot, will pass from the law"</p>
+                                <p class="counter-detail">Heaven and earth haven't passed away!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Jesus Said: Keep Commandments for Eternal Life</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 19:17</span> — "If you want to enter into life, <span class="highlight">KEEP THE COMMANDMENTS</span>"</p>
+                                <p class="counter-detail">No mention of "believe I'll die for your sins"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">PAUL (Not Jesus) Abolished the Law</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Romans 7:6</span> — Paul: "We are <span class="highlight-red">discharged from the law</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Acts 13:39</span> — Paul: "Everyone that believes is freed from...the law of Moses"</p>
+                                <p class="counter-detail">Paul never met Jesus during his ministry!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Paul's FALSE Prophecy</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">1 Thessalonians 4:15-17</span> — "We who are <span class="highlight-red">still alive</span>...will be caught up" — Expected Jesus' return in his lifetime</p>
+                                <p class="counter-detail">2,000 years later — still waiting!</p>
+                                <p class="counter-detail"><span class="verse-ref">Deuteronomy 18:22</span> — "If prophecy doesn't come true, that's NOT from the Lord"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">5</span>
+                                <span class="counter-title">Apostles Abandoned Paul at His Trial</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Acts 21:28</span> — Jewish mob attacked Paul after he preached against the Law</p>
+                                <p class="counter-detail">Thousands of apostles/elders in Jerusalem — <span class="highlight-red">NONE defended Paul</span> at trial</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If Jesus came to abolish the law, why did he explicitly say he came NOT to abolish it?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Who changed Jesus' message — Jesus or Paul who never met him?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">Why did the apostles who walked with Jesus abandon Paul when he was put on trial?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"And We sent, following in their footsteps, Jesus, the son of Mary, confirming that which came before him in the Torah."</p>
+                            <p class="quran-ref">Quran 5:46</p>
+                            <p class="islamic-summary">Jesus came to CONFIRM the Torah, not abolish it.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 6: Prophecies of Muhammad -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge pink">Topic 6</span>
+                        <h1 class="card-title">Prophecies of Muhammad ﷺ</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"There are no prophecies about Muhammad in the Bible. Jesus is the final revelation."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">The Counselor/Comforter (Paraclete)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">John 14:16</span> — Jesus: "I will give you <span class="highlight">ANOTHER Counselor</span>"</p>
+                                <p class="counter-detail">Greek "allon" = another of the <span class="highlight">SAME KIND</span> (a person like Jesus)</p>
+                                <p class="counter-detail"><span class="verse-ref">John 16:7</span> — "If I do not go away, the Counselor will <span class="highlight">NOT come</span>"</p>
+                                <p class="counter-detail">But Holy Spirit was already present! (<span class="verse-ref">Luke 1:15, 41, 67</span>) — So this must be someone else</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Prophet Like Moses (Deuteronomy 18:18)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">God: "I will raise up a prophet like you from among their <span class="highlight">BRETHREN</span>"</p>
+                                <p class="counter-detail">"Brethren" = Arabs (Ishmael's descendants, brother of Isaac)</p>
+                                <p class="counter-detail">God: "I will put my <span class="highlight">WORDS IN HIS MOUTH</span>" — Quran = Allah's literal words</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Servant from Kedar (Isaiah 42:1, 11)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">God: "Behold my servant... Let the villages that <span class="highlight">KEDAR</span> inhabits lift up their voice"</p>
+                                <p class="counter-detail">Kedar = Ishmael's son, ancestor of Arabs</p>
+                                <p class="counter-detail">Only "Servant" prophecy specifically connected to Arabs/Kedar</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If the Counselor is the Holy Spirit, why did Jesus say he can't come unless Jesus leaves, when the Holy Spirit was already present?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Who is the prophet "like Moses" from the "brethren" of Israelites (i.e., the Arabs)?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">3</span>
+                            <p class="question-text">Why is Kedar (the Arabs) specifically mentioned in the Servant prophecy (Isaiah 42)?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"And [Jesus said] giving good tidings of a messenger to come after me, whose name is Ahmad."</p>
+                            <p class="quran-ref">Quran 61:6</p>
+                            <p class="islamic-summary">Ahmad and Muhammad both come from root "hamd" = praise. Jesus foretold Muhammad's coming.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 7: Jesus' Return -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge cyan">Topic 7</span>
+                        <h1 class="card-title">Jesus' Return</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus will return to judge the world as God."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Muslims Believe in Jesus' Return Too</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Key difference: Jesus will return as a <span class="highlight">FOLLOWER of Muhammad ﷺ</span></p>
+                                <p class="counter-detail">Will implement Islamic law, not judge as God</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Jesus' Mission Upon Return</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="highlight">Break the cross</span> (reject crucifixion narrative)</p>
+                                <p class="counter-detail"><span class="highlight">Kill the pig</span> (enforce pork prohibition)</p>
+                                <p class="counter-detail">Fight to establish Islam</p>
+                                <p class="counter-detail">Kill the False Christ (Dajjal/Antichrist)</p>
+                                <p class="counter-detail">Remain 40 years, then die a natural death</p>
+                                <p class="counter-detail">Muslims will pray funeral prayer for him</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"And there is none from the People of the Scripture but that he will surely believe in Jesus before his death. And on the Day of Resurrection he will be against them a witness."</p>
+                            <p class="quran-ref">Quran 4:159</p>
+                            <p class="islamic-summary">Jesus will be a witness on Judgment Day. Final judgment belongs to Allah alone.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 8: Problem of Evil -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge blue">Topic 8</span>
+                        <h1 class="card-title">Problem of Evil</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"The existence of evil and suffering proves there is no all-powerful, all-good God."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">God is AL-HAKEEM (The Wise)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">God is not ONLY Good and Powerful — He is <span class="highlight">THE WISE</span></p>
+                                <p class="counter-detail">Whatever Allah wills is in line with WISDOM</p>
+                                <p class="counter-detail">Just because we don't see the wisdom doesn't mean it doesn't exist</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Story of Moses and Al-Khidr (Quran 18)</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Al-Khidr damaged a ship → <span class="highlight">Wisdom:</span> Saved it from being seized by a king</p>
+                                <p class="counter-detail">Al-Khidr killed a boy → <span class="highlight">Wisdom:</span> Would have caused parents to disbelieve</p>
+                                <p class="counter-detail">What appears evil may serve greater good we cannot perceive</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">God HAS Given Reasons for Suffering</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Our primary purpose is <span class="highlight">worship</span>, not worldly comfort</p>
+                                <p class="counter-detail">This life is a <span class="highlight">TEST</span> — trials are inevitable</p>
+                                <p class="counter-detail">Evil is the EXCEPTION (illness short-lived vs. health)</p>
+                                <p class="counter-detail">Trials enable us to know God's attributes (The Healer, The Just)</p>
+                                <p class="counter-detail">Ultimate justice in the afterlife</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask (Christians)</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If suffering is consequence of Adam's sin, why does a just God punish innocent children for their ancestor's mistake?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">How does the cross solve ongoing suffering after Jesus' crucifixion?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions for Atheists</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If there's no God, how can you call anything objectively evil?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Doesn't your outrage at injustice presuppose an objective standard that requires God?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"[He] who created death and life to test you [as to] which of you is best in deed."</p>
+                            <p class="quran-ref">Quran 67:2</p>
+                            <p class="islamic-summary">"Allah does not charge a soul except [with that within] its capacity." (2:286) — God empowers us to overcome every test.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 9: The Way of Jesus -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge emerald">Topic 9</span>
+                        <h1 class="card-title">The Way of Jesus</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Christians follow Jesus Christ and live according to his teachings and example."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Christians DON'T Follow Jesus!</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Circumcision</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jesus: Circumcised on 8th day (<span class="verse-ref">Luke 2:21</span>) per "everlasting covenant"</p>
+                                <p class="counter-detail">Paul: "If you receive circumcision, Christ will be of no advantage" (<span class="verse-ref">Gal 5:2</span>)</p>
+                                <p class="counter-detail"><span class="highlight">Muslims are circumcised</span> — Christians are not</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Prohibition of Pork</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Torah: "Of swine flesh you shall not eat" (<span class="verse-ref">Leviticus 11:7-8</span>)</p>
+                                <p class="counter-detail">Jesus followed Torah / Christians eat pork</p>
+                                <p class="counter-detail"><span class="highlight">Muslims don't eat pork</span> — Christians do</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Prostration in Prayer</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jesus: "<span class="highlight">Fell on his face</span> and prayed" (<span class="verse-ref">Matthew 26:39</span>)</p>
+                                <p class="counter-detail">All prophets prostrated: Abraham, Moses, Elijah</p>
+                                <p class="counter-detail"><span class="highlight">Muslims prostrate</span> — Christians kneel on chairs</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Women's Veiling</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">1 Corinthians 11:5-6</span> — "Every woman that prays...with head uncovered dishonors her head"</p>
+                                <p class="counter-detail"><span class="highlight">Muslim women wear hijab</span> — Most Christian women don't veil</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">5</span>
+                                <span class="counter-title">Greeting of Peace</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jesus: "<span class="highlight">Peace be unto you</span>" (<span class="verse-ref">John 20:19, 21, 26</span>)</p>
+                                <p class="counter-detail"><span class="highlight">Muslims: "Assalaamu alaikum"</span> / Christians: "Hello"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">6</span>
+                                <span class="counter-title">Fasting</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jesus: Fasted 40 days (<span class="verse-ref">Matthew 4:2</span>) like Moses</p>
+                                <p class="counter-detail"><span class="highlight">Muslims fast Ramadan</span> — Christians don't fast regularly</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">Jesus was circumcised, didn't eat pork, prostrated in prayer — do you do any of these?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Who follows Jesus' way more closely — Muslims who maintain his practices, or Christians who abandoned them?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"O you who have believed, decreed upon you is fasting as it was decreed upon those before you."</p>
+                            <p class="quran-ref">Quran 2:183</p>
+                            <p class="islamic-summary">Islam revived and preserved the way of all prophets, including Jesus.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 10: Jesus' Miracles -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge red">Topic 10</span>
+                        <h1 class="card-title">Jesus' Miracles</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus' miracles prove his divinity because only God could perform such wonders."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Other Prophets Performed SAME Miracles</span>
+                            </div>
+                            <div class="counter-details">
+                                <table class="compare-table">
+                                    <tr>
+                                        <th>Miracle</th>
+                                        <th>Earlier Prophets</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Fed multitudes</td>
+                                        <td>Elisha (2 Kings 4:44)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Healed lepers</td>
+                                        <td>Elisha (2 Kings 5:14)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Raised the dead</td>
+                                        <td>Elijah (1 Kings 17:22)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Walked on water</td>
+                                        <td>Moses crossed sea (Exodus 14)</td>
+                                    </tr>
+                                </table>
+                                <p class="counter-detail" style="margin-top: 10px;">Elisha's <span class="highlight">BONES</span> raised the dead (<span class="verse-ref">2 Kings 13:21</span>) — Greater than Jesus?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Jesus Admitted Miracles Were From God</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">John 5:30</span> — "I can of mine own self do <span class="highlight">NOTHING</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 11:20</span> — "If I with the FINGER OF GOD cast out devils..."</p>
+                                <p class="counter-detail"><span class="verse-ref">Acts 2:22</span> — "Jesus of Nazareth, A MAN...with mighty works which <span class="highlight">GOD DID THROUGH HIM</span>"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Miracles Authenticate, Not Deify</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">If miracles = divinity, then ALL prophets are divine</p>
+                                <p class="counter-detail">Point: Miracles authenticate the <span class="highlight">messenger</span>, not prove the messenger IS God</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If performing miracles makes someone divine, why aren't Elijah, Elisha, and Moses divine?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">If you saw someone perform a miracle today, would you worship them as God?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"[Jesus said] I cure the blind and the leper, and I give life to the dead — by permission of Allah."</p>
+                            <p class="quran-ref">Quran 3:49</p>
+                            <p class="islamic-summary">All miracles: "BY PERMISSION OF ALLAH" — not Jesus' own power.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 11: "Son of God" -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge amber">Topic 11</span>
+                        <h1 class="card-title">"Son of God"</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Jesus is called the 'Son of God,' which proves his unique divine nature."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Jesus NEVER Called Himself "Son of God"</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Jesus repeatedly called himself "<span class="highlight">SON OF MAN</span>" (<span class="verse-ref">Luke 9:22</span>, etc.)</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 4:41</span> — Demons called him "Son of God" — Jesus <span class="highlight-red">REBUKED them</span> and "would not allow them to speak"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">MANY People Called "Son of God" in Bible</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Exodus 4:22-23</span> — Israel: "Israel is my <span class="highlight">FIRST-BORN son</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">2 Samuel 7:13-14</span> — Solomon: "I will be his father, and he shall be my son"</p>
+                                <p class="counter-detail"><span class="verse-ref">Psalms 2:7</span> — David: "You are my son, today I have <span class="highlight">BEGOTTEN</span> you"</p>
+                                <p class="counter-detail"><span class="verse-ref">Job 1:6</span> — Angels: "Sons of God came to present themselves"</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 3:38</span> — Adam: "the son of Adam, the son of God"</p>
+                                <p class="counter-detail"><span class="verse-ref">Matthew 5:9</span> — Peacemakers: "They will be called sons of God"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Earliest Christians Called Jesus "A MAN FROM GOD"</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Acts 2:22</span> (33 CE speech): "Jesus of Nazareth, <span class="highlight">A MAN FROM GOD</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Acts 3:13, 22, 23, 26</span> — Jesus called "servant" and "prophet" — NOT "Son of God"</p>
+                                <p class="counter-detail">This reflects ORIGINAL belief before Greek/Roman influence</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If being called "son of God" makes Jesus divine, why aren't Israel, Solomon, David, Adam, and angels divine?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Jesus rebuked those who called him "Son of God" (Luke 4:41) — why reject a title proving divinity?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"Say, 'He is Allah, [who is] One. Allah, the Eternal Refuge. He neither begets nor is He begotten. Nor is there to Him any equivalent.'"</p>
+                            <p class="quran-ref">Quran 112:1-4</p>
+                            <p class="islamic-summary">Allah does not beget, nor is He begotten. The title "son of God" is metaphorical, not literal.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 12: How Jesus Worshipped -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge purple">Topic 12</span>
+                        <h1 class="card-title">How Jesus Worshipped</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"Christian worship today reflects how Jesus worshipped."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Jesus Worshipped Like MUSLIMS</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Ablution (Wudu) Before Prayer</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Exodus 40:31-32</span> — Moses & Aaron: "Washed their hands and feet...as the Lord commanded"</p>
+                                <p class="counter-detail"><span class="highlight">Muslims perform wudu</span> before every prayer / Christians don't</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">Prostration (Sajdah) in Prayer</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 26:39</span> — Jesus: "<span class="highlight">Fell on his face</span> and prayed"</p>
+                                <p class="counter-detail">Abraham: "Fell on his face" (<span class="verse-ref">Genesis 17:3</span>)</p>
+                                <p class="counter-detail">Moses & Aaron: "Fell on their faces" (<span class="verse-ref">Numbers 20:6</span>)</p>
+                                <p class="counter-detail"><span class="highlight">Muslims prostrate</span> / Christians sit in pews</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Bowing (Ruku) in Prayer</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Psalms 95:6</span> — "O come, let us worship and <span class="highlight">bow down</span>, let us kneel before the Lord"</p>
+                                <p class="counter-detail"><span class="highlight">Muslims bow</span> in every prayer / Christians don't</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Women Cover Hair While Praying</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">1 Corinthians 11:5-6</span> — "Every woman that prays...with head uncovered <span class="highlight-red">dishonors her head</span>"</p>
+                                <p class="counter-detail"><span class="highlight">Muslim women wear hijab</span> / Most Christian women don't cover</p>
+                                <p class="counter-detail">Even nuns cover their hair!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">5</span>
+                                <span class="counter-title">Greeting of Peace</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">John 20:19, 21, 26</span> — Jesus: "<span class="highlight">Peace be unto you</span>"</p>
+                                <p class="counter-detail">Muslims: "Assalaamu alaikum" / Christians: "Hello"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If Jesus prayed by prostrating (falling on his face), why don't Christians pray that way?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">Doesn't it seem strange that Muslims follow Jesus' method of worship more than Christians do?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"O you who have believed, when you rise to [perform] prayer, wash your faces and your forearms to the elbows and wipe over your heads and wash your feet to the ankles."</p>
+                            <p class="quran-ref">Quran 5:6</p>
+                            <p class="islamic-summary">Muslims follow the way of all prophets in how they worship.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 13: Original Sin -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge pink">Topic 13</span>
+                        <h1 class="card-title">Original Sin</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">"All humans are born sinful due to Adam's sin, and only Jesus' crucifixion can atone for this."</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Counter-Points</h2>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">1</span>
+                                <span class="counter-title">Original Sin is UNJUST</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail">Would a loving father punish his great-great-grandchildren for his son's mistake?</p>
+                                <p class="counter-detail">How can All-Just God punish billions for one man's sin?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">2</span>
+                                <span class="counter-title">The Bible REJECTS Inherited Sin</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Ezekiel 18:20</span> — "The son shall <span class="highlight">NOT</span> bear the iniquity of the father"</p>
+                                <p class="counter-detail"><span class="verse-ref">Deuteronomy 24:16</span> — "Every man shall be put to death for his <span class="highlight">OWN sin</span>"</p>
+                                <p class="counter-detail"><span class="verse-ref">Jeremiah 31:29-30</span> — "Everyone shall die for his OWN sin"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">3</span>
+                                <span class="counter-title">Jesus Said Children Are Pure</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Matthew 19:14</span> — "Let the little children come to me...for the kingdom of heaven <span class="highlight">BELONGS TO SUCH AS THESE</span>"</p>
+                                <p class="counter-detail">If children are sinful, how can kingdom belong to them? <span class="highlight-red">Contradiction!</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">4</span>
+                                <span class="counter-title">Bible Calls People "PERFECT"</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Genesis 6:9, 7:1</span> — Noah: "<span class="highlight">PERFECT</span> in his generations...RIGHTEOUS"</p>
+                                <p class="counter-detail"><span class="verse-ref">Job 1:1</span> — Job: "PERFECT and upright, feared God, shunned evil"</p>
+                                <p class="counter-detail">How can they be perfect if all are born sinful?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="counter-point">
+                            <div class="counter-point-header">
+                                <span class="counter-num">5</span>
+                                <span class="counter-title">God Forgives Without Blood Sacrifice</span>
+                            </div>
+                            <div class="counter-details">
+                                <p class="counter-detail"><span class="verse-ref">Jonah 3</span> — Nineveh (120,000+): Forgiven through repentance and fasting</p>
+                                <p class="counter-detail"><span class="verse-ref">Luke 19:9</span> — Zacchaeus: "TODAY salvation has come" through repentance — BEFORE crucifixion!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Questions to Ask</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">1</span>
+                            <p class="question-text">If a loving father wouldn't punish great-grandchildren for his son's mistake, how can God punish all humanity for Adam's sin?</p>
+                        </div>
+                        <div class="question-item">
+                            <span class="question-num">2</span>
+                            <p class="question-text">The Bible calls Noah and Job "perfect" — how, if all humans are born sinful?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"No bearer of burdens will bear the burden of another."</p>
+                            <p class="quran-ref">Quran 53:38</p>
+                            <p class="islamic-summary">Humans are born pure (fitrah). Each accountable for their own deeds. "Allah forgives all sins" (39:53) — when we repent.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 14: Denominations -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="topic-badge cyan">Topic 14</span>
+                        <h1 class="card-title">Denominations</h1>
+                    </div>
+                    
+                    <div class="claim-box">
+                        <div class="claim-label">Their Claim</div>
+                        <p class="claim-text">Various Christian groups claim to follow the true teachings of Jesus.</p>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon counter">⚡</div>
+                            <h2 class="section-title">Quick Denomination Notes</h2>
+                        </div>
+                        
+                        <div class="denom-card">
+                            <div class="denom-name">Catholics</div>
+                            <div class="denom-detail">• Pope, Mary veneration, 7 sacraments, purgatory, <span class="highlight">73 books</span> in Bible</div>
+                            <div class="denom-detail">• Ask Filipinos: "Holy Mary Mother of God" — If Mary is Mother of God, what is her son but a god?</div>
+                        </div>
+                        
+                        <div class="denom-card">
+                            <div class="denom-name">Protestants/Evangelicals</div>
+                            <div class="denom-detail">• Sola Scriptura (Scripture alone), reject Pope/tradition</div>
+                            <div class="denom-detail">• <span class="highlight">66 books</span> in Bible (7 fewer than Catholics)</div>
+                            <div class="denom-detail">• Dawah approach: Must use Scripture only, not tradition</div>
+                        </div>
+                        
+                        <div class="denom-card">
+                            <div class="denom-name">Jehovah's Witnesses</div>
+                            <div class="denom-detail">• Jesus NOT God (just son of God), no hell, no eternal punishment</div>
+                            <div class="denom-detail">• <span class="highlight-red">Predicted end of world 6 times</span> (1914, 1918, 1920, 1925, 1941, 1975) — ALL FAILED</div>
+                            <div class="denom-detail">• Since they reject Trinity, focus on Muhammad's prophethood</div>
+                        </div>
+                        
+                        <div class="denom-card">
+                            <div class="denom-name">Seventh Day Adventists</div>
+                            <div class="denom-detail">• Sabbath is Saturday, Ellen White is prophet</div>
+                            <div class="denom-detail">• <span class="highlight">NO PORK/ALCOHOL</span> (like Muslims!)</div>
+                            <div class="denom-detail">• Ask: Why follow some Torah laws (dietary) but not others (circumcision)?</div>
+                        </div>
+                        
+                        <div class="denom-card">
+                            <div class="denom-name">Mormons (LDS)</div>
+                            <div class="denom-detail">• Adam is God incarnate (!), God had sex with Mary (!)</div>
+                            <div class="denom-detail">• <span class="highlight-red">Blacks excluded from temples until 1978</span></div>
+                            <div class="denom-detail">• Convenient "revelations" show human manipulation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon question">❓</div>
+                            <h2 class="section-title">Key Question for ALL</h2>
+                        </div>
+                        
+                        <div class="question-item">
+                            <span class="question-num">★</span>
+                            <p class="question-text">"If the Bible is God's Word, why do Catholics have 73 books, Protestants have 66, and you disagree on core doctrines?"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-icon islam">☪</div>
+                            <h2 class="section-title">Islamic Position</h2>
+                        </div>
+                        
+                        <div class="islamic-box">
+                            <p class="quran-translation">"And hold firmly to the rope of Allah all together and do not become divided."</p>
+                            <p class="quran-ref">Quran 3:103</p>
+                            <p class="islamic-summary">Islam has ONE Quran, ONE core creed (Aqeedah), preserved without variation across all Muslims worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="swipe-hint" id="swipeHint">
+            <span class="swipe-icon">👆</span>
+            <span>Swipe to navigate</span>
+        </div>
+        
+        <nav class="nav-dots" id="navDots">
+            <div class="nav-dot active" onclick="goToCard(0)"></div>
+            <div class="nav-dot" onclick="goToCard(1)"></div>
+            <div class="nav-dot" onclick="goToCard(2)"></div>
+            <div class="nav-dot" onclick="goToCard(3)"></div>
+            <div class="nav-dot" onclick="goToCard(4)"></div>
+            <div class="nav-dot" onclick="goToCard(5)"></div>
+            <div class="nav-dot" onclick="goToCard(6)"></div>
+            <div class="nav-dot" onclick="goToCard(7)"></div>
+            <div class="nav-dot" onclick="goToCard(8)"></div>
+            <div class="nav-dot" onclick="goToCard(9)"></div>
+            <div class="nav-dot" onclick="goToCard(10)"></div>
+            <div class="nav-dot" onclick="goToCard(11)"></div>
+            <div class="nav-dot" onclick="goToCard(12)"></div>
+            <div class="nav-dot" onclick="goToCard(13)"></div>
+        </nav>
+    </div>
+    
+    <!-- Topic Menu Overlay -->
+    <div class="topic-menu-overlay" id="topicMenu" onclick="closeMenu()">
+        <div class="topic-menu" onclick="event.stopPropagation()">
+            <div class="topic-menu-header">
+                <span class="topic-menu-title">Jump to Topic</span>
+                <button class="topic-menu-close" onclick="closeMenu()">×</button>
+            </div>
+            <div class="topic-menu-item active" onclick="goToCard(0); closeMenu();">
+                <span class="topic-menu-num">1</span>
+                <span class="topic-menu-name">Biblical Reliability</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(1); closeMenu();">
+                <span class="topic-menu-num">2</span>
+                <span class="topic-menu-name">Trinity & Divinity</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(2); closeMenu();">
+                <span class="topic-menu-num">3</span>
+                <span class="topic-menu-name">Crucifixion & Atonement</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(3); closeMenu();">
+                <span class="topic-menu-num">4</span>
+                <span class="topic-menu-name">Jesus as Prophet</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(4); closeMenu();">
+                <span class="topic-menu-num">5</span>
+                <span class="topic-menu-name">Original Message of Jesus</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(5); closeMenu();">
+                <span class="topic-menu-num">6</span>
+                <span class="topic-menu-name">Prophecies of Muhammad</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(6); closeMenu();">
+                <span class="topic-menu-num">7</span>
+                <span class="topic-menu-name">Jesus' Return</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(7); closeMenu();">
+                <span class="topic-menu-num">8</span>
+                <span class="topic-menu-name">Problem of Evil</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(8); closeMenu();">
+                <span class="topic-menu-num">9</span>
+                <span class="topic-menu-name">The Way of Jesus</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(9); closeMenu();">
+                <span class="topic-menu-num">10</span>
+                <span class="topic-menu-name">Jesus' Miracles</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(10); closeMenu();">
+                <span class="topic-menu-num">11</span>
+                <span class="topic-menu-name">"Son of God"</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(11); closeMenu();">
+                <span class="topic-menu-num">12</span>
+                <span class="topic-menu-name">How Jesus Worshipped</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(12); closeMenu();">
+                <span class="topic-menu-num">13</span>
+                <span class="topic-menu-name">Original Sin</span>
+            </div>
+            <div class="topic-menu-item" onclick="goToCard(13); closeMenu();">
+                <span class="topic-menu-num">14</span>
+                <span class="topic-menu-name">Denominations</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const track = document.getElementById('cardsTrack');
+        const dots = document.querySelectorAll('.nav-dot');
+        const menuItems = document.querySelectorAll('.topic-menu-item');
+        const swipeHint = document.getElementById('swipeHint');
+        
+        let currentCard = 0;
+        const totalCards = 14;
+        
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let isHorizontalSwipe = null;
+        
+        // Touch events
+        track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            currentX = startX;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            
+            swipeHint.classList.add('hidden');
+        }, { passive: true });
+        
+        track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            const diffX = Math.abs(touchX - startX);
+            const diffY = Math.abs(touchY - startY);
+            
+            if (isHorizontalSwipe === null && (diffX > 10 || diffY > 10)) {
+                isHorizontalSwipe = diffX > diffY;
+                if (isHorizontalSwipe) {
+                    track.classList.add('dragging');
+                }
+            }
+            
+            if (isHorizontalSwipe === true) {
+                currentX = touchX;
+                const diff = currentX - startX;
+                const offset = -currentCard * 100 + (diff / track.offsetWidth) * 100;
+                track.style.transform = `translateX(${offset}%)`;
+            }
+        }, { passive: true });
+        
+        track.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            track.classList.remove('dragging');
+            
+            if (isHorizontalSwipe === true) {
+                const diff = currentX - startX;
+                const threshold = track.offsetWidth * 0.2;
+                
+                if (diff < -threshold && currentCard < totalCards - 1) {
+                    currentCard++;
+                } else if (diff > threshold && currentCard > 0) {
+                    currentCard--;
+                }
+                
+                updatePosition();
+            }
+            
+            isHorizontalSwipe = null;
+        });
+        
+        // Mouse events for desktop testing
+        track.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            startY = e.clientY;
+            currentX = startX;
+            isDragging = true;
+            isHorizontalSwipe = null;
+            swipeHint.classList.add('hidden');
+        });
+        
+        track.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const diffX = Math.abs(e.clientX - startX);
+            const diffY = Math.abs(e.clientY - startY);
+            
+            if (isHorizontalSwipe === null && (diffX > 10 || diffY > 10)) {
+                isHorizontalSwipe = diffX > diffY;
+                if (isHorizontalSwipe) {
+                    track.classList.add('dragging');
+                }
+            }
+            
+            if (isHorizontalSwipe === true) {
+                currentX = e.clientX;
+                const diff = currentX - startX;
+                const offset = -currentCard * 100 + (diff / track.offsetWidth) * 100;
+                track.style.transform = `translateX(${offset}%)`;
+            }
+        });
+        
+        track.addEventListener('mouseup', handleDragEnd);
+        track.addEventListener('mouseleave', handleDragEnd);
+        
+        function handleDragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            track.classList.remove('dragging');
+            
+            if (isHorizontalSwipe === true) {
+                const diff = currentX - startX;
+                const threshold = track.offsetWidth * 0.2;
+                
+                if (diff < -threshold && currentCard < totalCards - 1) {
+                    currentCard++;
+                } else if (diff > threshold && currentCard > 0) {
+                    currentCard--;
+                }
+                
+                updatePosition();
+            }
+            
+            isHorizontalSwipe = null;
+        }
+        
+        function goToCard(index) {
+            currentCard = index;
+            updatePosition();
+            swipeHint.classList.add('hidden');
+        }
+        
+        function updatePosition() {
+            track.style.transform = `translateX(-${currentCard * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentCard);
+            });
+            
+            menuItems.forEach((item, i) => {
+                item.classList.toggle('active', i === currentCard);
+            });
+        }
+        
+        function openMenu() {
+            document.getElementById('topicMenu').classList.add('open');
+        }
+        
+        function closeMenu() {
+            document.getElementById('topicMenu').classList.remove('open');
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentCard < totalCards - 1) {
+                currentCard++;
+                updatePosition();
+            } else if (e.key === 'ArrowLeft' && currentCard > 0) {
+                currentCard--;
+                updatePosition();
+            } else if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+        
+        setTimeout(() => {
+            swipeHint.classList.add('hidden');
+        }, 5000);
+    </script>
+</body>
+</html>
